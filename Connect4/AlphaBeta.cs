@@ -63,164 +63,147 @@ namespace Connect4
       //2. situation
       while (true)
       {
-        bool[][] checkedBoard = new bool[board.NumberOfColumns][];
-        for (int i = 0; i < board.NumberOfColumns; i++)
-          checkedBoard[i] = new bool[board.NumberOfRows];
-
-        bool res = CheckSecondSituation(firstPlayer, board, checkedBoard);
+        int result = 0;
+        bool res = CheckSecondSituation(firstPlayer, board, ref result);
       
       }
 
     }
 
-    public bool CheckSecondSituation(bool firstPlayer, Board currentBoard, bool[][] checkedBoard)
+    /// <summary>
+    /// true if 900 000 or infinity
+    /// </summary>
+    /// <param name="firstPlayer"></param>
+    /// <param name="currentBoard"></param>
+    /// <param name="checkedBoard"></param>
+    /// <returns></returns>
+    public bool CheckSecondSituation(bool firstPlayer, Board currentBoard, ref int result)
     {
-      int result;
-      if (CheckSecondSituationHorizonatally(firstPlayer, currentBoard, out result))
+      if (CheckSecondSituationHorizonatally(firstPlayer, currentBoard, ref result))
         return true;
-      //if (CheckSecondSituationVertically(firstPlayer, currentBoard, checkedBoard))
-      //  return true;
-      if (CheckSecondSituationDiagonally(firstPlayer, currentBoard, checkedBoard))
+      else if (CheckSecondSituationVertically(firstPlayer, currentBoard, ref result))
         return true;
+      else if (CheckSecondSituationDiagonally(firstPlayer, currentBoard, ref result))
+        return true;
+      return result == 900000;
+    }
+
+
+    public bool CheckSecondSituationVertically(bool firstPlayer, Board currentBoard, ref int result)
+    {
+      //if found twice, res = inf
+      bool found = false;
+      for(int c = 0; c < currentBoard.NumberOfColumns; c++)
+      {
+        int lastR = currentBoard.GetFirstFreeRow(c);
+        if (lastR == currentBoard.NumberOfRows || lastR < 3) continue;
+        for (int i = 1; i <= 3; i++)
+          if (currentBoard[c, lastR - i] != firstPlayer)
+            continue;
+        //found twice!
+        if(found)
+        {
+          result = int.MaxValue;
+          return true;
+        }
+        found = true;
+        result = 900000;
+      }
       return false;
     }
 
-    private bool CheckSecondSituationDiagonally(bool firstPlayer, Board currentBoard, bool[][] checkedBoard)
+    private bool CheckSecondSituationDiagonally(bool firstPlayer, Board currentBoard, ref int result)
     {
       throw new NotImplementedException();
     }
 
-
-    //_OOO_ returns infinity
-
-    //_OOO_
-    //_XOXX returns 900 000 - one opponent's mistake
-
-    //OO__OX returns 50 000 - two opponent's mistake
-
-    //_OOOX returns 900 000 - one opponent's mistake
-
-    //_OOOX
-    //_XOXO returns 900 000 - one opponent's mistake
-
-    //OOOX returns 0
-    public bool CheckSecondSituationHorizonatally(bool firstPlayer, Board currentBoard, out int result)
+    //examples in tests
+    /// <summary>
+    /// true if found infinity
+    /// </summary>
+    /// <param name="firstPlayer"></param>
+    /// <param name="currentBoard"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public bool CheckSecondSituationHorizonatally(bool firstPlayer, Board currentBoard, ref int result)
     {
       bool[] lacks = new bool[currentBoard.NumberOfColumns];
-      result = 0;
       for (int r = 0; r < currentBoard.NumberOfRows; r++)
       {
-        int startCol = 0;
-        while (true)
+        List<int> starts = FindStartsOfTwoTokensInRowInRow(currentBoard, r, firstPlayer);
+        foreach(var start in starts)
         {
-          int col = 0;
-          int times = 0;
-          while (col + startCol < currentBoard.NumberOfColumns && currentBoard[startCol + col, r] != !firstPlayer)
-            if(currentBoard[col++, r] == firstPlayer) times++;
-          if (startCol + col < 4)
+          if (start + 3 < currentBoard.NumberOfColumns)
           {
-            //there is still chance to find sequence
-            startCol += col + 1;
-            continue;
-          }
-          
-          if (col >= 4 && times >= 3)
-          { 
-            //5,6,7 in row
-            if (col >= 5)
+            bool? lack = null;
+            //OOO_
+            if (currentBoard[start + 2, r] == firstPlayer && currentBoard[start + 3, r] == null)
+              lack = lacks[start + 3];
+            //OO_O
+            else if (currentBoard[start + 3, r] == firstPlayer && currentBoard[start + 2, r] == null)
+              lack = lacks[start + 2];
+
+            if (lack != null)
             {
-              if (col == 5)
-              {
-                if (lacks.Skip(startCol).Contains(true))
-                {
-                  //_OOO_
-                  //_XOXX returns 900 000
-                  result = 900000;
-                }
-                else
-                {
-                  //_OOO_ returns infinity
-                  result = int.MaxValue;
-                }
-                return true;
-              }
+              if (start == 0 || lacks[start - 1] || currentBoard[start - 1, r] == !firstPlayer || lack == true)
+                result = 900000;
               else
               {
-                int firstToken = startCol;
-                while (currentBoard[firstToken, r] != firstPlayer)
-                  firstToken++;
-
-                //OOO
-                 if (currentBoard[firstToken + 1, r] == firstPlayer && currentBoard[firstToken + 2, r] == firstPlayer)
-                {
-                  //without break, so if its on the edge it has just one opportunity to win
-                  if (firstToken == 0 || firstToken == 4)
-                  {
-                    result = 900000;
-                  }
-                  //there are lacks
-                  else if (lacks[firstToken - 1] || lacks[firstToken + 3])
-                  {
-                    result = 900000;
-                  }
-                  else
-                  {
-                    result = int.MaxValue;
-                  }
-                  return true;
-                }
-                //O_OO
-                else if (currentBoard[firstToken + 1, r] == null && currentBoard[firstToken + 2, r] == firstPlayer && currentBoard[firstToken + 3, r] == firstPlayer) 
-                {
-                  int numOfLacks = 0;
-                  if (firstToken > 0 && lacks[firstToken - 1]) numOfLacks++;
-                  if (lacks[firstToken + 1]) numOfLacks++;
-                  if (firstToken + 4 < currentBoard.NumberOfColumns && lacks[firstToken + 4]) numOfLacks++;
-                  if (numOfLacks <= 2)
-                  {
-                    if (numOfLacks <= 1)
-                      result = int.MaxValue;
-                    else if (numOfLacks == 2)
-                      result = 900000;
-                    return true;
-                  }
-                }
-                //OO_O
-                else if (currentBoard[firstToken + 1, r] == firstPlayer && currentBoard[firstToken + 2, r] == null && currentBoard[firstToken + 3, r] == firstPlayer)
-                {
-                  int numOfLacks = 0;
-                  if (firstToken > 0 && lacks[firstToken - 1]) numOfLacks++;
-                  if (lacks[firstToken + 2]) numOfLacks++;
-                  if (firstToken + 4 < currentBoard.NumberOfColumns && lacks[firstToken + 4]) numOfLacks++;
-                  if (numOfLacks <= 2)
-                  {
-                    if (numOfLacks <= 1)
-                      result = int.MaxValue;
-                    else if (numOfLacks == 2)
-                      result = 900000;
-                    return true;
-                  }
-                }
+                result = int.MaxValue;
+                return true;
               }
-
             }
-            //4 in row
+
+          }
+          if(start - 2 >= 0)
+          {
+            bool lack = false;
+            //_OOO
+            if (currentBoard[start - 2, r] == null && currentBoard[start + 1, r] == firstPlayer)
+              lack = lacks[start - 2];
+            //O_OO
+            else if (currentBoard[start - 1, r] == null && currentBoard[start - 2, r] == firstPlayer)
+              lack = lacks[start - 1];
+            else continue;
+
+            if (start == currentBoard.NumberOfColumns - 2 || lacks[start + 2] || currentBoard[start + 2, r] == !firstPlayer || lack)
+              result = 900000;
             else
             {
-              result = 900000;
+              result = int.MaxValue;
               return true;
             }
           }
-          break;
         }
-        //fill lacks
         for (int i = 0; i < currentBoard.NumberOfColumns; i++)
           if (currentBoard[i, r] == null)
             lacks[i] = true;
       }
-      result = 0;
       return false;
     }
-    
+
+    private List<int> FindStartsOfTwoTokensInRowInRow(Board currentBoard, int r, bool player)
+    {
+      List<int> starts = new List<int>();
+      bool start = false;
+      for(int i = 0; i < currentBoard.NumberOfColumns; i++)
+      {
+        if (currentBoard[i, r] == player)
+        {
+          //two in row
+          if (start)
+          {
+            starts.Add(i - 1);
+            start = false;
+            //decrease i in case of OOO
+            i--;
+          }
+          else start = true;
+        }
+        else if (start)
+          start = false;
+      }
+      return starts;
+    }
   }
 }
