@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Connect4UnitTests
 {
   [TestClass]
-  public class AlphaBetaTests
+  public class AbSecondSituationTests
   {
     [TestMethod]
     public void CheckSecondSituationHorizontallyTest()
