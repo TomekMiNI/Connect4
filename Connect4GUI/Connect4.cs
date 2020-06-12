@@ -24,6 +24,7 @@ namespace Connect4GUI
     private bool play = false;
     private bool firstPlayer = true;
     private VS vs;
+    AlphaBeta ab;
    
     public Connect4()
     {
@@ -63,13 +64,12 @@ namespace Connect4GUI
       if (colIndex == table.ColumnCount - 1) return;
       bool? win;
       board.PutToken(firstPlayer, colIndex, out win);
-      firstPlayer = !firstPlayer;
       table.Invalidate();
       if (win != false)
       {
         if (win == true)
         {
-          MessageBox.Show(string.Format("{0} player won!", !firstPlayer ? "First" : "Second"));
+          MessageBox.Show(string.Format("{0} player won!", firstPlayer ? "First" : "Second"));
         }
         else if (win == null)
         {
@@ -77,11 +77,29 @@ namespace Connect4GUI
         }
         play = start = false;
       }
+      firstPlayer = !firstPlayer;
+      var abMove = ab.MakeMove(firstPlayer, firstPlayer, board);
+      if(abMove != false)
+      {
+        if (abMove == true)
+        {
+          MessageBox.Show(string.Format("{0} player won!", firstPlayer ? "First" : "Second"));
+        }
+        else if (win == null)
+        {
+          MessageBox.Show("DRAW!");
+        }
+        play = start = false;
+      }
+      firstPlayer = !firstPlayer;
+
     }
+
     
 
     private void StartButton_Click(object sender, EventArgs e)
     {
+      ab = new AlphaBeta();
       if (playerRB.Checked)
         vs = VS.Player;
       else if (abRB.Checked)

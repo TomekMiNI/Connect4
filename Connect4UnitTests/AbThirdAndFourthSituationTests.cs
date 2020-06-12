@@ -111,5 +111,49 @@ namespace Connect4UnitTests
       Assert.AreEqual(result, 320);
 
     }
+
+    [TestMethod]
+    public void CalculateCurrentBoardTest()
+    {
+      Board board = new Board();
+      bool? win;
+      AlphaBeta alphaBeta = new AlphaBeta();
+      int result = 0;
+
+      //_______
+      //X_X_X_X
+      board.PutToken(true, 0, out win);
+      board.PutToken(true, 2, out win);
+      board.PutToken(true, 4, out win);
+      board.PutToken(true, 6, out win);
+      alphaBeta.CalculateCurrentBoard(true, board);
+    }
+    [TestMethod]
+    public void MakeMoveTest()
+    {
+      Board board = new Board();
+      bool? win;
+      AlphaBeta alphaBeta = new AlphaBeta();
+      int result = 0;
+
+      //_______
+      //X_X_X_X
+      //board.PutToken(true, 0, out win);
+      //board.PutToken(true, 2, out win);
+      //board.PutToken(true, 4, out win);
+      //board.PutToken(true, 6, out win);
+      //alphaBeta.MakeMove(false, board);
+
+      //O_____
+      //O_____
+      //O___XX
+      board = new Board();
+      board.PutToken(false, 1, out win);
+      board.PutToken(false, 1, out win);
+      board.PutToken(false, 1, out win);
+      board.PutToken(true, 6, out win);
+      board.PutToken(true, 5, out win);
+      alphaBeta.MakeMove(true, true, board);
+    }
   }
 }

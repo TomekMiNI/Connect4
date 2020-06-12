@@ -68,7 +68,6 @@
       this.MainPanel.TabIndex = 0;
       this.MainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
       this.MainPanel.MouseClick += mainPanel_MouseClick;
-      
       // 
       // StartButton
       // 

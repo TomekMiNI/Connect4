@@ -8,14 +8,16 @@ namespace Connect4
 {
   public class AlphaBeta
   {
-    public bool? MakeMove(bool firstPlayer, Board board)
+    public bool? MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 3)
     {
-      int maxLevel = 5;
       int alpha = int.MinValue;
       int beta = int.MaxValue;
-      var move = CalculateNextMove(firstPlayer, firstPlayer, 1, maxLevel, ref alpha, ref beta, board);
+      int bestRes = alpha;
+      int bestMove = -1;
       bool? win;
-      board.PutToken(firstPlayer, move, out win);
+      bestMove = CalculateNextMove(firstPlayer, turnPlayer, 0, maxLevel, ref alpha, ref beta, board);
+           
+      board.PutToken(firstPlayer, bestMove, out win);
       return win;
     }
 
@@ -23,7 +25,9 @@ namespace Connect4
     private int CalculateNextMove(bool firstPlayer, bool turnPlayer, int level, int maxLevel, ref int alpha, ref int beta, Board board)
     {
       int bestResult = alpha;
-      int bestMove = -1;
+      int bestMove = 0;
+      int locAlpha = alpha;
+      int locBeta = beta;
       for (int i = 0; i < board.NumberOfColumns; i++)
       {
         Board locBoard = board.Clone();
@@ -34,35 +38,35 @@ namespace Connect4
           if (win != false || level == maxLevel)
           {
             if (win == true)
-              bestResult = int.MaxValue;
-            //draw or max depth
+                bestResult = int.MaxValue;
+
+            //draw or max depth or opponent's win
             else if (win == null || level == maxLevel)
             {
               var res = CalculateCurrentBoard(firstPlayer, locBoard);
               if (bestResult < res)
-              {
-                bestMove = i;
                 bestResult = res;
-              }
             }
             //PRUNNING
-            //maximize level of tree (alpha)
+            //there was turn player's round and it's over so maximize
             if (turnPlayer == firstPlayer)
             {
-              if (alpha < bestResult)
+              if (bestResult == int.MaxValue || alpha < bestResult)
               {
                 alpha = bestResult;
-                if (alpha > beta)
+                bestMove = i;
+                if (alpha == int.MaxValue || alpha >= beta)
                   return i;
               }
             }
-            //minimizing level of tree (beta)
+            //minimize
             else
             {
-              if (beta > -bestResult)
+              if (bestResult == int.MaxValue || beta > -bestResult)
               {
-                beta = -bestResult;
-                if (beta < alpha)
+                beta = bestResult == int.MaxValue ? int.MinValue : -bestResult;
+                bestMove = i;
+                if (beta == int.MinValue || beta <= alpha)
                   return i;
               }
             }
@@ -71,8 +75,30 @@ namespace Connect4
           else
           {
             //increase in case of next starting (turn) player
-            if (firstPlayer != turnPlayer) level++;
-            var move = CalculateNextMove(!firstPlayer, turnPlayer, level, maxLevel, ref alpha, ref beta, locBoard);
+            if (firstPlayer == turnPlayer) level++;
+            CalculateNextMove(!firstPlayer, turnPlayer, level, maxLevel, ref alpha, ref beta, locBoard);
+
+            //there was minimize, so beta is new
+            if (firstPlayer == turnPlayer)
+            {
+              //now we want to maximize
+              if (beta > alpha)
+              {
+                alpha = beta;
+                bestMove = i;
+              }
+              level--;
+              beta = int.MaxValue;
+            }
+            else
+            {
+              if(alpha < beta)
+              {
+                beta = alpha;
+                bestMove = i;
+              }
+              alpha = int.MinValue;
+            }
           }
 
         }
@@ -80,19 +106,15 @@ namespace Connect4
       return bestMove;
     }
 
-    private int CalculateCurrentBoard(bool firstPlayer, Board board)
+    public int CalculateCurrentBoard(bool firstPlayer, Board board)
     {
-      //2. situation
-      while (true)
-      {
-        int result = 0;
-        if (CheckSecondSituation(firstPlayer, board, ref result)) return result;
+      int result = 0;
+      if (CheckSecondSituation(firstPlayer, board, ref result)) return result;
 
         //sum second (50 000), third, fourth
-        CheckThirdSituation(firstPlayer, board, ref result);
-        CheckFourthSituation(firstPlayer, board, ref result);
-      }
-
+      CheckThirdSituation(firstPlayer, board, ref result);
+      CheckFourthSituation(firstPlayer, board, ref result);
+      return result;
     }
 
     public void CheckFourthSituation(bool firstPlayer, Board board, ref int result)
@@ -101,6 +123,7 @@ namespace Connect4
       {
         for (int r = 0; r < board.NumberOfRows; r++)
         {
+          if (board[c, r] != firstPlayer) continue;
           if (c > 0)
           {
             if (board[c - 1, r] == firstPlayer) { break; }
@@ -180,7 +203,8 @@ namespace Connect4
         int r = board.GetFirstFreeRow(c);
         if (r >= board.NumberOfRows - 1 || r < 2 || (r - 3 >= 0 && board[c, r - 3] == firstPlayer)) continue;
 
-        result += GetValueFromThirdSituation(board.NumberOfRows - r);
+        if(board[c, r - 1] == board[c, r - 2] == firstPlayer)
+          result += GetValueFromThirdSituation(board.NumberOfRows - r);
       }
     }
 
