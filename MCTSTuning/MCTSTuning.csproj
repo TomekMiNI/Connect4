@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B03505FA-45F6-4CAE-A17C-DEABBCA17A8E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Connect4</RootNamespace>
-    <AssemblyName>Connect4</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <ProjectGuid>{63F8D27B-42ED-4AD4-856D-70A095E2F6D2}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MCTSTuning</RootNamespace>
+    <AssemblyName>MCTSTuning</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,15 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,20 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithm base\Constants.cs" />
-    <Compile Include="Algorithm base\MCTS.cs" />
-    <Compile Include="Algorithm base\TreeNode.cs" />
-    <Compile Include="Algorithm base\AlgorithmInterface.cs" />
-    <Compile Include="AlphaBeta.cs" />
-    <Compile Include="Algorithms\PUCT.cs" />
-    <Compile Include="Algorithms\UCB1TUNED.cs" />
-    <Compile Include="Algorithms\UCT.cs" />
-    <Compile Include="Board.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Connect4\Connect4.csproj">
+      <Project>{B03505FA-45F6-4CAE-A17C-DEABBCA17A8E}</Project>
+      <Name>Connect4</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

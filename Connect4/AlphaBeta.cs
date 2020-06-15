@@ -8,17 +8,15 @@ namespace Connect4
 {
   public class AlphaBeta
   {
-    public bool? MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 3)
+    public void MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 3)
     {
       int alpha = int.MinValue;
       int beta = int.MaxValue;
       int bestRes = alpha;
       int bestMove = -1;
-      bool? win;
       bestMove = CalculateNextMove(firstPlayer, turnPlayer, 0, maxLevel, ref alpha, ref beta, board);
            
-      board.PutToken(firstPlayer, bestMove, out win);
-      return win;
+      board.PutToken(bestMove);
     }
 
     //return move
@@ -32,7 +30,7 @@ namespace Connect4
       {
         Board locBoard = board.Clone();
         bool? win = false;
-        if (locBoard.PutToken(firstPlayer, i, out win))
+        if (locBoard.PutToken(i))
         {
           //time to go back in tree
           if (win != false || level == maxLevel)

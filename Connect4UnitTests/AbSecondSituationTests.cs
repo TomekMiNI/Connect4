@@ -11,29 +11,28 @@ namespace Connect4UnitTests
     public void CheckSecondSituationHorizontallyTest()
     {
       Board board = new Board();
-      bool? win;
       AlphaBeta alphaBeta = new AlphaBeta();
       int result = 0;
 
       //OOO_
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(2);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
 
       result = 0;
       //_OO_O
       board.RemoveToken(0);
-      board.PutToken(true, 4, out win);
+      board.PutToken(4);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
 
       result = 0;
       //_OOOX
       board.RemoveToken(4);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 3, out win);
+      board.PutToken(4);
+      board.PutToken(3);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -47,22 +46,22 @@ namespace Connect4UnitTests
       //_OOO___
       //_XOXOXO
       board = new Board();
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 6, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 5, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 3, out win);
+      board.PutToken(2);
+      board.PutToken(4);
+      board.PutToken(6);
+      board.PutToken(1);
+      board.PutToken(3);
+      board.PutToken(5);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(3);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
 
       result = 0;
       //_OOO___
       //XXOXOXO
-      board.PutToken(false, 0, out win);
+      board.PutToken(0);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
 
@@ -70,7 +69,7 @@ namespace Connect4UnitTests
       result = 0;
       //XOOO___
       //XXOXOXO
-      board.PutToken(false, 0, out win);
+      board.PutToken(0);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -78,16 +77,16 @@ namespace Connect4UnitTests
       //_XO_OO_
       //_OOOXXX
       board = new Board();
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(false, 5, out win);
-      board.PutToken(false, 6, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 5, out win);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(5);
+      board.PutToken(6);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(4);
+      board.PutToken(5);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -95,15 +94,15 @@ namespace Connect4UnitTests
       //OOO____
       //XXX_OOO
       board = new Board();
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 5, out win);
-      board.PutToken(true, 6, out win);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(4);
+      board.PutToken(5);
+      board.PutToken(6);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -118,10 +117,10 @@ namespace Connect4UnitTests
       //OOOX___
       result = 0;
       board = new Board();
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(false, 3, out win);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(3);
       var res = alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.IsFalse(res);
       Assert.AreEqual(50000, result);
@@ -136,13 +135,13 @@ namespace Connect4UnitTests
       //___OOO_
       result = 0;
       board = new Board();
-      board.PutToken(true, 3, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 5, out win);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(5);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
 
-      board.PutToken(false, 2, out win);
+      board.PutToken(2);
       alphaBeta.CheckSecondSituationHorizonatally(true, board, ref result);
       Assert.AreEqual(900000, result);
     }
@@ -154,16 +153,16 @@ namespace Connect4UnitTests
       AlphaBeta alphaBeta = new AlphaBeta();
       int result = 0;
 
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(1);
       alphaBeta.CheckSecondSituationVertically(true, board, ref result);
       Assert.AreEqual(900000, result);
 
 
-      board.PutToken(true, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(true, 3, out win);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
       alphaBeta.CheckSecondSituationVertically(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
     }
@@ -185,12 +184,12 @@ namespace Connect4UnitTests
       //__X____
       //_XX____
       //XXX____
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 2, out win);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -199,10 +198,10 @@ namespace Connect4UnitTests
       //_XXO___
       //XXXO___
       result = 0;
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(50000, result);
 
@@ -222,11 +221,11 @@ namespace Connect4UnitTests
       //_XXO___
       //_XXO___
       board.RemoveToken(3);
-      board.PutToken(false, 4, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 4, out win);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -236,13 +235,13 @@ namespace Connect4UnitTests
       //____X_X
       //___XX_X
       board = new Board();
-      board.PutToken(true, 3, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 6, out win);
-      board.PutToken(true, 6, out win);
-      board.PutToken(true, 6, out win);
-      board.PutToken(true, 6, out win);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(6);
+      board.PutToken(6);
+      board.PutToken(6);
+      board.PutToken(6);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -253,15 +252,15 @@ namespace Connect4UnitTests
       //XOO____
       //OXO____
       board = new Board();
-      board.PutToken(false, 0, out win);
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(true, 2, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -273,11 +272,11 @@ namespace Connect4UnitTests
       //XOOO___
       //OXOO___
       board.RemoveToken(1);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(true, 3, out win);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -288,11 +287,11 @@ namespace Connect4UnitTests
       //__OXO__
       //XOOOX__
       //OXOOX__
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 4, out win);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -304,7 +303,7 @@ namespace Connect4UnitTests
       //OXOOX__
       result = 0;
       board.RemoveToken(2);
-      board.PutToken(true, 1, out win);
+      board.PutToken(1);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -315,20 +314,20 @@ namespace Connect4UnitTests
       //_OXOO__
       result = 0;
       board = new Board();
-      board.PutToken(false, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(false, 4, out win);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
       alphaBeta.CheckSecondSituationDiagonallyRightTop(true, board, ref result);
       Assert.AreEqual(900000, result);
 
@@ -350,16 +349,16 @@ namespace Connect4UnitTests
       //OX______
       //OXX_____
       //OXXX____
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 3, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(3);
       alphaBeta.CheckSecondSituationDiagonallyLeftTop(true, board, ref result);
       Assert.AreEqual(50000, result);
 
@@ -390,23 +389,23 @@ namespace Connect4UnitTests
       //OXOXOX_
       board = new Board();
       result = 0;
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 5, out win);
-      board.PutToken(true, 5, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(5);
+      board.PutToken(5);
       alphaBeta.CheckSecondSituationDiagonallyLeftTop(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
     }
@@ -425,23 +424,23 @@ namespace Connect4UnitTests
       //__OOX__          
       //OXOXOX_
       //OXOXOX_
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 5, out win);
-      board.PutToken(true, 5, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(5);
+      board.PutToken(5);
       alphaBeta.CheckSecondSituation(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
 
@@ -453,19 +452,19 @@ namespace Connect4UnitTests
       //_OXOO__
       result = 0;
       board = new Board();
-      board.PutToken(false, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 4, out win);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
+      board.PutToken(4);
       alphaBeta.CheckSecondSituation(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
 
@@ -478,9 +477,9 @@ namespace Connect4UnitTests
       //_OXOOX_
       board.RemoveToken(3);
       result = 0;
-      board.PutToken(true, 5, out win);
-      board.PutToken(true, 5, out win);
-      board.PutToken(true, 5, out win);
+      board.PutToken(5);
+      board.PutToken(5);
+      board.PutToken(5);
       alphaBeta.CheckSecondSituation(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
 
@@ -490,19 +489,19 @@ namespace Connect4UnitTests
       //OOOXO
       board = new Board();
       result = 0;
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 0, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(false, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 3, out win);
-      board.PutToken(true, 3, out win);
-      board.PutToken(false, 4, out win);
-      board.PutToken(true, 4, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(2);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(3);
+      board.PutToken(4);
+      board.PutToken(4);
       alphaBeta.CheckSecondSituation(true, board, ref result);
       Assert.AreEqual(int.MaxValue, result);
     }
