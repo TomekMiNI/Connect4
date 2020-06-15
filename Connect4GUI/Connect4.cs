@@ -26,7 +26,8 @@ namespace Connect4GUI
 		private bool firstPlayer = true;
 		private VS vs;
 		AlphaBeta ab;
-		UCT uct;
+		PUCT puct;
+		UCB1TUNED ucb1tuned;
 
 
 		public Connect4()
@@ -71,7 +72,7 @@ namespace Connect4GUI
 			if (CheckResult())
 				return;
 			firstPlayer = !firstPlayer;
-			//var move = uct.SelectMove(board);
+			//var move = puct.SelectMove(board);
 			//board.PutToken(move);
 			ab.MakeMove(firstPlayer, firstPlayer, board);
 			CheckResult();
@@ -103,7 +104,8 @@ namespace Connect4GUI
 		private void StartButton_Click(object sender, EventArgs e)
 		{
 			ab = new AlphaBeta();
-			uct = new UCT(1, 123, 100000);
+			puct = new PUCT(2, 123, 100000);
+			//ucb1tuned = new UCB1TUNED(1, 123, 100000);
 			if (playerRB.Checked)
 				vs = VS.Player;
 			else if (abRB.Checked)

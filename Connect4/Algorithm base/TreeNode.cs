@@ -16,11 +16,20 @@ namespace Connect4.Algorithm_base
 		public int ActionsTaken { get; set; }
 		public int VisitedCount { get; set; }
 		public double CumulativeScore { get; set; }
+		public double CumulativeSquaredScore { get; set; }
 		public double MeanScore
 		{
 			get
 			{
 				return CumulativeScore / VisitedCount;
+			}
+		}
+
+		public double Var
+		{
+			get
+			{
+				return CumulativeSquaredScore / VisitedCount;
 			}
 		}
 
@@ -42,6 +51,7 @@ namespace Connect4.Algorithm_base
 			{
 				node.VisitedCount++;
 				node.CumulativeScore += score;
+				node.CumulativeSquaredScore += (score * score);
 				//node.UpdateNodeStats(score);
 				score = -score;
 				node = node.Parent;
@@ -59,6 +69,19 @@ namespace Connect4.Algorithm_base
 
 		//public abstract void UpdateNodeStats(int outcome);
 		//public abstract TreeNode CreateNode(Board board);
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append($"{MeanScore.ToString("0.00")} ");
+			foreach (var child in Children)
+			{
+				if (child == null)
+					sb.Append("null ");
+				else
+					sb.Append($"{child.VisitedCount} ");
+			}
+			return sb.ToString();
+		}
 	}
 
 }

@@ -18,7 +18,7 @@ namespace MCTSTuning
 
 		static double TimeMCTS()
 		{
-			var uct = new UCT(Math.Sqrt(2), 123, 100000);
+			var uct = new UCT(2, 123, 100000);
 			var board = new Board();
 			var stopwatch = Stopwatch.StartNew();
 			var move = uct.SelectMove(board);

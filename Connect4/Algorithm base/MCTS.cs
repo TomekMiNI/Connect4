@@ -99,7 +99,13 @@ namespace Connect4.Algorithm_base
 				Iterations++;
 				Expand();
 			}
-			return MaxVisitAction();
+			switch (Constants.moveSelection)
+			{
+				case MoveSelection.MostVisited:
+					return MaxVisitAction();
+				case MoveSelection.BestScore:
+					return BestScoreAction();
+			}
 		}
 
 		//robust child https://ai.stackexchange.com/questions/16905/mcts-how-to-choose-the-final-action-from-the-root
@@ -109,9 +115,25 @@ namespace Connect4.Algorithm_base
 			var indexOfMax = 0;
 			for (int i = 0; i < ncols; i++)
 			{
-				if (Root.Children[i].VisitedCount > visitMax)
+				if (Root.Children[i] != null && Root.Children[i].VisitedCount > visitMax)
 				{
 					visitMax = Root.Children[i].VisitedCount;
+					indexOfMax = i;
+				}
+			}
+			return indexOfMax;
+		}
+
+		//max child
+		private int BestScoreAction()
+		{
+			var maxScore = 0.0;
+			var indexOfMax = 0;
+			for (int i = 0; i < ncols; i++)
+			{
+				if (Root.Children[i] != null && Root.Children[i].MeanScore > maxScore)
+				{
+					maxScore = Root.Children[i].MeanScore;
 					indexOfMax = i;
 				}
 			}
