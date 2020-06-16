@@ -21,10 +21,10 @@ namespace Connect4UnitTests
 
       //XX_____
       //XX_____
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
       alphaBeta.CheckThirdSituationHorizontally(true, board, ref result);
       Assert.AreEqual(result, 80000);
 
@@ -39,19 +39,19 @@ namespace Connect4UnitTests
 
       //XX_____
       //XX_____
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
       alphaBeta.CheckThirdSituationDiagonally(true, board, ref result);
       Assert.AreEqual(result, 30000);
 
       //XX___XX
       //XX___XX
-      board.PutToken(true, 6, out win);
-      board.PutToken(true, 6, out win);
-      board.PutToken(true, 5, out win);
-      board.PutToken(true, 5, out win);
+      board.PutToken(6);
+      board.PutToken(6);
+      board.PutToken(5);
+      board.PutToken(5);
       result = 0;
       alphaBeta.CheckThirdSituationDiagonally(true, board, ref result);
       Assert.AreEqual(result, 60000);
@@ -67,10 +67,10 @@ namespace Connect4UnitTests
 
       //XX_____
       //XX_____
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
       alphaBeta.CheckThirdSituationVertically(true, board, ref result);
       Assert.AreEqual(result, 60000);
 
@@ -85,10 +85,10 @@ namespace Connect4UnitTests
 
       //XX_____
       //XX_____
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 1, out win);
-      board.PutToken(true, 1, out win);
+      board.PutToken(0);
+      board.PutToken(0);
+      board.PutToken(1);
+      board.PutToken(1);
       alphaBeta.CheckThirdSituation(true, board, ref result);
       Assert.AreEqual(result, 170000);
 
@@ -103,10 +103,10 @@ namespace Connect4UnitTests
 
       //_______
       //X_X_X_X
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 6, out win);
+      board.PutToken(0);
+      board.PutToken(2);
+      board.PutToken(4);
+      board.PutToken(6);
       alphaBeta.CheckFourthSituation(true, board, ref result);
       Assert.AreEqual(result, 320);
 
@@ -122,10 +122,10 @@ namespace Connect4UnitTests
 
       //_______
       //X_X_X_X
-      board.PutToken(true, 0, out win);
-      board.PutToken(true, 2, out win);
-      board.PutToken(true, 4, out win);
-      board.PutToken(true, 6, out win);
+      board.PutToken(0);
+      board.PutToken(2);
+      board.PutToken(4);
+      board.PutToken(6);
       alphaBeta.CalculateCurrentBoard(true, board);
     }
     [TestMethod]
@@ -138,21 +138,21 @@ namespace Connect4UnitTests
 
       //_______
       //X_X_X_X
-      //board.PutToken(true, 0, out win);
-      //board.PutToken(true, 2, out win);
-      //board.PutToken(true, 4, out win);
-      //board.PutToken(true, 6, out win);
+      //board.PutToken(0);
+      //board.PutToken(2);
+      //board.PutToken(4);
+      //board.PutToken(6);
       //alphaBeta.MakeMove(false, board);
 
       //O_____
       //O_____
       //O___XX
       board = new Board();
-      board.PutToken(false, 1, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(false, 1, out win);
-      board.PutToken(true, 6, out win);
-      board.PutToken(true, 5, out win);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(1);
+      board.PutToken(6);
+      board.PutToken(5);
       alphaBeta.MakeMove(true, true, board);
     }
   }

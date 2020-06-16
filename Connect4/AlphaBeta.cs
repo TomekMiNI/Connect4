@@ -6,46 +6,22 @@ using System.Threading.Tasks;
 
 namespace Connect4
 {
-  public class ostr
-  {
-    public int alpha;
-    public int beta;
-    public int level;
-    public bool firstPlayer;
-    public ostr[] kids = new ostr[8];
-    public void fill(int a, int b, int l, bool f)
-    {
-      alpha = a;
-      beta = b;
-      level = l;
-      firstPlayer = f;
-    }
-    public ostr() { }
-
-    public override string ToString()
-    {
-      return base.ToString();
-    }
-  }
+  
   public class AlphaBeta
   {
-   
-    public bool? MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 3)
+    public void MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 3)
     {
       int alpha = int.MinValue;
       int beta = int.MaxValue;
       int bestRes = alpha;
       int bestMove = 0;
-      bool? win;
-      ostr root = new ostr();
-      bestMove = CalculateNextMove(firstPlayer, turnPlayer, 0, maxLevel, ref alpha, ref beta, board, root);
-           
-      board.PutToken(firstPlayer, bestMove, out win);
-      return win;
+      bestMove = CalculateNextMove(firstPlayer, turnPlayer, 0, maxLevel, ref alpha, ref beta, board);
+       
+      board.PutToken(bestMove);
     }
 
     //return move
-    private int CalculateNextMove(bool firstPlayer, bool turnPlayer, int level, int maxLevel, ref int alpha, ref int beta, Board board, ostr root)
+    private int CalculateNextMove(bool firstPlayer, bool turnPlayer, int level, int maxLevel, ref int alpha, ref int beta, Board board)
     {
       //its just on max level
       if (level == maxLevel)
@@ -60,12 +36,17 @@ namespace Connect4
 
       for (int i = 0; i < board.NumberOfColumns; i++)
       {
-        ostr localRoot = new ostr();
         Board locBoard = board.Clone();
         bool? win = false;
         bool put = false;
-        if (locBoard.PutToken(firstPlayer, i, out win))
+        if (locBoard.PutToken(i))
         {
+          if (locBoard.Result == Result.Draw)
+            win = null;
+          else if (locBoard.Result == Result.None)
+            win = false;
+          else
+            win = true;
           put = true;
           //time to go back in tree
           if (win != false || level == maxLevel)
@@ -82,7 +63,7 @@ namespace Connect4
           {
             //increase in case of next starting (turn) player
             if (firstPlayer == turnPlayer) level++;
-            result = CalculateNextMove(!firstPlayer, turnPlayer, level, maxLevel, ref alpha, ref beta, locBoard, localRoot);
+            result = CalculateNextMove(!firstPlayer, turnPlayer, level, maxLevel, ref alpha, ref beta, locBoard);
           }
 
         }
@@ -101,11 +82,7 @@ namespace Connect4
           if(win == false)
           level--;
           if (alpha == int.MaxValue ||  alpha >= localBeta)
-          {
-            localRoot.fill(alpha, beta, level, firstPlayer);
-            root.kids[i] = localRoot;
             break;
-          }
           beta = localBeta;
         }
         else
@@ -119,15 +96,9 @@ namespace Connect4
             bestMove = i;
           }
           if (beta == int.MinValue || beta <= localAlpha)
-          {
-            localRoot.fill(alpha, beta, level, firstPlayer);
-            root.kids[i] = localRoot;
             break;
-          }
           alpha = localAlpha;
         }
-        localRoot.fill(alpha, beta, level, firstPlayer);
-        root.kids[i] = localRoot;
       }
       return (level == 0 && firstPlayer == turnPlayer) ? bestMove : bestResult;
     }
