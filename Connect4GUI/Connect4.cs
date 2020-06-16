@@ -28,6 +28,7 @@ namespace Connect4GUI
 		AlphaBeta ab;
 		PUCT puct;
 		UCB1TUNED ucb1tuned;
+    private bool yourTurn = true;
 
 
 		public Connect4()
@@ -112,9 +113,17 @@ namespace Connect4GUI
 				vs = VS.AlphaBeta;
 			else
 				vs = VS.MCTS;
+      yourTurn = youStartBox.Checked;
 			board = new Board();
 			firstPlayer = play = start = true;
 			MainPanel.Invalidate();
+      if(!yourTurn)
+      {
+        ab.MakeMove(firstPlayer, firstPlayer, board);
+        CheckResult();
+        firstPlayer = !firstPlayer;
+        MainPanel.Invalidate();
+      }
 		}
 	}
 }

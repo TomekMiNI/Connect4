@@ -34,8 +34,15 @@
       this.vsGB = new System.Windows.Forms.GroupBox();
       this.abRB = new System.Windows.Forms.RadioButton();
       this.playerRB = new System.Windows.Forms.RadioButton();
+      this.startBox = new System.Windows.Forms.GroupBox();
+      this.playerStartRB = new System.Windows.Forms.RadioButton();
+      this.youStartBox = new System.Windows.Forms.RadioButton();
+      this.mctsRB = new System.Windows.Forms.RadioButton();
+      this.puctRB = new System.Windows.Forms.RadioButton();
+      this.tunedRB = new System.Windows.Forms.RadioButton();
       this.MainPanel.SuspendLayout();
       this.vsGB.SuspendLayout();
+      this.startBox.SuspendLayout();
       this.SuspendLayout();
       // 
       // MainPanel
@@ -52,6 +59,7 @@
       this.MainPanel.Controls.Add(this.StartButton, 7, 0);
       this.MainPanel.Controls.Add(this.TurnLabel, 7, 1);
       this.MainPanel.Controls.Add(this.vsGB, 7, 2);
+      this.MainPanel.Controls.Add(this.startBox, 7, 4);
       this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.MainPanel.Location = new System.Drawing.Point(0, 0);
       this.MainPanel.Margin = new System.Windows.Forms.Padding(6);
@@ -94,11 +102,15 @@
       // 
       // vsGB
       // 
+      this.vsGB.Controls.Add(this.tunedRB);
+      this.vsGB.Controls.Add(this.puctRB);
+      this.vsGB.Controls.Add(this.mctsRB);
       this.vsGB.Controls.Add(this.abRB);
       this.vsGB.Controls.Add(this.playerRB);
       this.vsGB.Location = new System.Drawing.Point(698, 153);
       this.vsGB.Name = "vsGB";
-      this.vsGB.Size = new System.Drawing.Size(97, 68);
+      this.MainPanel.SetRowSpan(this.vsGB, 2);
+      this.vsGB.Size = new System.Drawing.Size(97, 142);
       this.vsGB.TabIndex = 3;
       this.vsGB.TabStop = false;
       this.vsGB.Text = "VS";
@@ -125,6 +137,72 @@
       this.playerRB.Text = "Player";
       this.playerRB.UseVisualStyleBackColor = true;
       // 
+      // startBox
+      // 
+      this.startBox.Controls.Add(this.playerStartRB);
+      this.startBox.Controls.Add(this.youStartBox);
+      this.startBox.Location = new System.Drawing.Point(698, 301);
+      this.startBox.Name = "startBox";
+      this.startBox.Size = new System.Drawing.Size(97, 68);
+      this.startBox.TabIndex = 4;
+      this.startBox.TabStop = false;
+      this.startBox.Text = "Starts";
+      // 
+      // playerStartRB
+      // 
+      this.playerStartRB.AutoSize = true;
+      this.playerStartRB.Location = new System.Drawing.Point(6, 45);
+      this.playerStartRB.Name = "playerStartRB";
+      this.playerStartRB.Size = new System.Drawing.Size(72, 17);
+      this.playerStartRB.TabIndex = 0;
+      this.playerStartRB.Text = "Opponent";
+      this.playerStartRB.UseVisualStyleBackColor = true;
+      // 
+      // youStartBox
+      // 
+      this.youStartBox.AutoSize = true;
+      this.youStartBox.Checked = true;
+      this.youStartBox.Location = new System.Drawing.Point(6, 20);
+      this.youStartBox.Name = "youStartBox";
+      this.youStartBox.Size = new System.Drawing.Size(44, 17);
+      this.youStartBox.TabIndex = 0;
+      this.youStartBox.TabStop = true;
+      this.youStartBox.Text = "You";
+      this.youStartBox.UseVisualStyleBackColor = true;
+      // 
+      // mctsRB
+      // 
+      this.mctsRB.AutoSize = true;
+      this.mctsRB.Location = new System.Drawing.Point(6, 68);
+      this.mctsRB.Name = "mctsRB";
+      this.mctsRB.Size = new System.Drawing.Size(55, 17);
+      this.mctsRB.TabIndex = 4;
+      this.mctsRB.TabStop = true;
+      this.mctsRB.Text = "MCTS";
+      this.mctsRB.UseVisualStyleBackColor = true;
+      // 
+      // puctRB
+      // 
+      this.puctRB.AutoSize = true;
+      this.puctRB.Location = new System.Drawing.Point(6, 91);
+      this.puctRB.Name = "puctRB";
+      this.puctRB.Size = new System.Drawing.Size(54, 17);
+      this.puctRB.TabIndex = 4;
+      this.puctRB.TabStop = true;
+      this.puctRB.Text = "PUCT";
+      this.puctRB.UseVisualStyleBackColor = true;
+      // 
+      // tunedRB
+      // 
+      this.tunedRB.AutoSize = true;
+      this.tunedRB.Location = new System.Drawing.Point(6, 114);
+      this.tunedRB.Name = "tunedRB";
+      this.tunedRB.Size = new System.Drawing.Size(94, 17);
+      this.tunedRB.TabIndex = 5;
+      this.tunedRB.TabStop = true;
+      this.tunedRB.Text = "UCB1-TUNED";
+      this.tunedRB.UseVisualStyleBackColor = true;
+      // 
       // Connect4
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -138,6 +216,8 @@
       this.MainPanel.PerformLayout();
       this.vsGB.ResumeLayout(false);
       this.vsGB.PerformLayout();
+      this.startBox.ResumeLayout(false);
+      this.startBox.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -152,6 +232,12 @@
     private System.Windows.Forms.GroupBox vsGB;
     private System.Windows.Forms.RadioButton abRB;
     private System.Windows.Forms.RadioButton playerRB;
+    private System.Windows.Forms.GroupBox startBox;
+    private System.Windows.Forms.RadioButton playerStartRB;
+    private System.Windows.Forms.RadioButton youStartBox;
+    private System.Windows.Forms.RadioButton tunedRB;
+    private System.Windows.Forms.RadioButton puctRB;
+    private System.Windows.Forms.RadioButton mctsRB;
   }
 }
 

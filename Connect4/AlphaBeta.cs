@@ -9,7 +9,7 @@ namespace Connect4
   
   public class AlphaBeta
   {
-    public void MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 3)
+    public void MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 5)
     {
       int alpha = int.MinValue;
       int beta = int.MaxValue;
