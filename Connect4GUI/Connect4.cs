@@ -78,14 +78,14 @@ namespace Connect4GUI
         play = start = false;
       }
       firstPlayer = !firstPlayer;
-      var abMove = ab.MakeMove(firstPlayer, firstPlayer, board);
+      var abMove = ab.MakeMove(firstPlayer, firstPlayer, board, 5);
       if(abMove != false)
       {
         if (abMove == true)
         {
           MessageBox.Show(string.Format("{0} player won!", firstPlayer ? "First" : "Second"));
         }
-        else if (win == null)
+        else if (abMove == null)
         {
           MessageBox.Show("DRAW!");
         }

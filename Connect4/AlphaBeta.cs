@@ -6,104 +6,130 @@ using System.Threading.Tasks;
 
 namespace Connect4
 {
+  public class ostr
+  {
+    public int alpha;
+    public int beta;
+    public int level;
+    public bool firstPlayer;
+    public ostr[] kids = new ostr[8];
+    public void fill(int a, int b, int l, bool f)
+    {
+      alpha = a;
+      beta = b;
+      level = l;
+      firstPlayer = f;
+    }
+    public ostr() { }
+
+    public override string ToString()
+    {
+      return base.ToString();
+    }
+  }
   public class AlphaBeta
   {
+   
     public bool? MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 3)
     {
       int alpha = int.MinValue;
       int beta = int.MaxValue;
       int bestRes = alpha;
-      int bestMove = -1;
+      int bestMove = 0;
       bool? win;
-      bestMove = CalculateNextMove(firstPlayer, turnPlayer, 0, maxLevel, ref alpha, ref beta, board);
+      ostr root = new ostr();
+      bestMove = CalculateNextMove(firstPlayer, turnPlayer, 0, maxLevel, ref alpha, ref beta, board, root);
            
       board.PutToken(firstPlayer, bestMove, out win);
       return win;
     }
 
     //return move
-    private int CalculateNextMove(bool firstPlayer, bool turnPlayer, int level, int maxLevel, ref int alpha, ref int beta, Board board)
+    private int CalculateNextMove(bool firstPlayer, bool turnPlayer, int level, int maxLevel, ref int alpha, ref int beta, Board board, ostr root)
     {
-      int bestResult = alpha;
+      //its just on max level
+      if (level == maxLevel)
+        return CalculateCurrentBoard(turnPlayer, board);
+
+      int localAlpha = alpha;
+      int localBeta = beta;
+
+      int bestResult = firstPlayer == turnPlayer ? int.MinValue : int.MaxValue;
+      int result = 0;
       int bestMove = 0;
-      int locAlpha = alpha;
-      int locBeta = beta;
+
       for (int i = 0; i < board.NumberOfColumns; i++)
       {
+        ostr localRoot = new ostr();
         Board locBoard = board.Clone();
         bool? win = false;
+        bool put = false;
         if (locBoard.PutToken(firstPlayer, i, out win))
         {
+          put = true;
           //time to go back in tree
           if (win != false || level == maxLevel)
           {
             if (win == true)
-                bestResult = int.MaxValue;
+                result = firstPlayer == turnPlayer ? int.MaxValue : int.MinValue;
 
-            //draw or max depth or opponent's win
-            else if (win == null || level == maxLevel)
-            {
-              var res = CalculateCurrentBoard(firstPlayer, locBoard);
-              if (bestResult < res)
-                bestResult = res;
-            }
-            //PRUNNING
-            //there was turn player's round and it's over so maximize
-            if (turnPlayer == firstPlayer)
-            {
-              if (bestResult == int.MaxValue || alpha < bestResult)
-              {
-                alpha = bestResult;
-                bestMove = i;
-                if (alpha == int.MaxValue || alpha >= beta)
-                  return i;
-              }
-            }
-            //minimize
-            else
-            {
-              if (bestResult == int.MaxValue || beta > -bestResult)
-              {
-                beta = bestResult == int.MaxValue ? int.MinValue : -bestResult;
-                bestMove = i;
-                if (beta == int.MinValue || beta <= alpha)
-                  return i;
-              }
-            }
+            //draw, so calculate result for turnPlayer
+            else if (win == null)
+              result = 0;
           }
           //go deeper
           else
           {
             //increase in case of next starting (turn) player
             if (firstPlayer == turnPlayer) level++;
-            CalculateNextMove(!firstPlayer, turnPlayer, level, maxLevel, ref alpha, ref beta, locBoard);
-
-            //there was minimize, so beta is new
-            if (firstPlayer == turnPlayer)
-            {
-              //now we want to maximize
-              if (beta > alpha)
-              {
-                alpha = beta;
-                bestMove = i;
-              }
-              level--;
-              beta = int.MaxValue;
-            }
-            else
-            {
-              if(alpha < beta)
-              {
-                beta = alpha;
-                bestMove = i;
-              }
-              alpha = int.MinValue;
-            }
+            result = CalculateNextMove(!firstPlayer, turnPlayer, level, maxLevel, ref alpha, ref beta, locBoard, localRoot);
           }
 
         }
+        if (!put) continue;
+        //there was minimize, so beta is new
+        if (firstPlayer == turnPlayer)
+        {
+          //now we want to maximize
+          if (result > bestResult)
+          {
+            bestResult = result;
+            if(alpha < bestResult)
+              alpha = bestResult;
+            bestMove = i;
+          }
+          if(win == false)
+          level--;
+          if (alpha == int.MaxValue ||  alpha >= localBeta)
+          {
+            localRoot.fill(alpha, beta, level, firstPlayer);
+            root.kids[i] = localRoot;
+            break;
+          }
+          beta = localBeta;
+        }
+        else
+        {
+          //minimize 
+          if (result < bestResult)
+          {
+            bestResult = result;
+            if(beta > bestResult)
+              beta = bestResult;
+            bestMove = i;
+          }
+          if (beta == int.MinValue || beta <= localAlpha)
+          {
+            localRoot.fill(alpha, beta, level, firstPlayer);
+            root.kids[i] = localRoot;
+            break;
+          }
+          alpha = localAlpha;
+        }
+        localRoot.fill(alpha, beta, level, firstPlayer);
+        root.kids[i] = localRoot;
       }
-      return bestMove;
+      return (level == 0 && firstPlayer == turnPlayer) ? bestMove : bestResult;
     }
 
     public int CalculateCurrentBoard(bool firstPlayer, Board board)
@@ -126,18 +152,18 @@ namespace Connect4
           if (board[c, r] != firstPlayer) continue;
           if (c > 0)
           {
-            if (board[c - 1, r] == firstPlayer) { break; }
-            if (r > 0 && board[c - 1, r - 1] == firstPlayer) { break; }
-            if (r < board.NumberOfRows - 1 && board[c - 1, r + 1] == firstPlayer) { break; }
+            if (board[c - 1, r] == firstPlayer) { continue; }
+            if (r > 0 && board[c - 1, r - 1] == firstPlayer) { continue; }
+            if (r < board.NumberOfRows - 1 && board[c - 1, r + 1] == firstPlayer) { continue; }
           }
           if(c < board.NumberOfColumns - 1)
           {
-            if (board[c + 1, r] == firstPlayer) { break; }
-            if (r > 0 && board[c + 1, r - 1] == firstPlayer) { break; }
-            if (r < board.NumberOfRows - 1 && board[c + 1, r + 1] == firstPlayer) { break; }
+            if (board[c + 1, r] == firstPlayer) { continue; }
+            if (r > 0 && board[c + 1, r - 1] == firstPlayer) { continue; }
+            if (r < board.NumberOfRows - 1 && board[c + 1, r + 1] == firstPlayer) { continue; }
           }
-          if(r > 0 && board[c, r - 1] == firstPlayer) { break; }
-          if(r < board.NumberOfRows - 1 && board[c, r+1]==firstPlayer) { break; }
+          if(r > 0 && board[c, r - 1] == firstPlayer) { continue; }
+          if(r < board.NumberOfRows - 1 && board[c, r+1]==firstPlayer) { continue; }
           result += GetValueFromColumn(c);
         }
       }
@@ -203,7 +229,7 @@ namespace Connect4
         int r = board.GetFirstFreeRow(c);
         if (r >= board.NumberOfRows - 1 || r < 2 || (r - 3 >= 0 && board[c, r - 3] == firstPlayer)) continue;
 
-        if(board[c, r - 1] == board[c, r - 2] == firstPlayer)
+        if(board[c, r - 1] == firstPlayer && board[c, r - 2] == firstPlayer)
           result += GetValueFromThirdSituation(board.NumberOfRows - r);
       }
     }
@@ -556,6 +582,8 @@ namespace Connect4
           else
             found = true;
         }
+        else
+          found = false;
         c--;
         r++;
       }
