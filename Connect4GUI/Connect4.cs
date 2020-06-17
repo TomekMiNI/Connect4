@@ -74,9 +74,9 @@ namespace Connect4GUI
 			if (CheckResult())
 				return;
 			firstPlayer = !firstPlayer;
-			//var move = ucb1tuned.SelectMove(board);
-			//board.PutToken(move);
-			ab.MakeMove(firstPlayer, firstPlayer, board);
+			var move = uct.SelectMove(board);
+			board.PutToken(move);
+			//ab.MakeMove(firstPlayer, firstPlayer, board);
 			CheckResult();
 			firstPlayer = !firstPlayer;
 		}
@@ -106,9 +106,9 @@ namespace Connect4GUI
 		private void StartButton_Click(object sender, EventArgs e)
 		{
 			ab = new AlphaBeta();
-			uct = new UCT(2, 123, 50000);
-			puct = new PUCT(2, 123, 10000);
-			ucb1tuned = new UCB1TUNED(1, 123, 50000);
+			uct = new UCT(Math.Sqrt(2), 123, 25000);
+			puct = new PUCT(Math.Sqrt(2), 123, 25000);
+			ucb1tuned = new UCB1TUNED(1, 123, 25000);
 			if (playerRB.Checked)
 				vs = VS.Player;
 			else if (abRB.Checked)

@@ -34,33 +34,37 @@ namespace Connect4.Algorithm_base
 		{
 			//find leaf node in tree
 			var currNode = Root;
-			while (currNode.AllActionsTested())
+			while (currNode.AllActionsTested() && currNode.Board.Result == Result.None)
 			{
 				currNode = SelectNextNode(currNode);
 			}
 
-			if(currNode.Board.Result == Result.None)
+			for (int i = 0; i < ncols; i++)
+			{
+				if (currNode.Children[i] != null
+					&& (currNode.Children[i].Board.Result == Result.FirstWon || currNode.Children[i].Board.Result == Result.SecondWon))
+				{
+					currNode = currNode.Children[i];
+					break;
+				}
+			}
+
+			if (currNode.Board.Result == Result.None)
 			{
 				//create new child node
 				var board = currNode.Board.Clone();
-				while (!currNode.AllActionsTested() && !board.PutToken(currNode.ActionsTaken))
-					currNode.ActionsTaken++;
-
-				//rollout and propagate outcome
-				if (!currNode.AllActionsTested())
-				{
-					var child = currNode.CreateChild(board);
-					var score = Rollout(child);
-					child.PropagadeScoreUp(score);
-					currNode.Children[currNode.ActionsTaken] = child;
-					currNode.ActionsTaken++;
-				}
+				var move = MakeMove(board);
+				var child = currNode.CreateChild(board);
+				var score = Rollout(child);
+				child.PropagadeScoreUp(score);
+				currNode.Children[move] = child;
+				currNode.ActionsTaken++;
 			}
 			else
 			{
 				if(currNode.Board.Score == null)
 				{
-					currNode.Board.Score = -currNode.Board.CalculateScore();
+					currNode.Board.Score = currNode.Board.CalculateScore();
 				}
 				currNode.PropagadeScoreUp(currNode.Board.Score.Value);
 			}
@@ -74,30 +78,39 @@ namespace Connect4.Algorithm_base
 			var childPlayer = !node.Board.ActivePlayer;
 			while (board.Result == Result.None)
 			{
-				if (MoveEvaluation == MoveEvaluation.OneAhead)
-					MakeLessRandomMove(board);
-				else
-					MakeRandomMove(board);
+				MakeMove(board);
 			}
-			var score = 0.0;
-			if (board.Result != Result.Draw)
-			{
-				var loser = board.ActivePlayer;
-				score = board.CalculateScore();
-				if (childPlayer == loser)
-					score = -score;
-			}
+
+			var loser = board.ActivePlayer;
+			var score = board.CalculateScore();
+			if (childPlayer == loser)
+				score = -score;
+
 			return score;
 		}
 
-		private void MakeRandomMove(Board board)
+		private int MakeMove(Board board)
 		{
-			//dirty, mb keep in board list of full columns
-			while (!board.PutToken(Generator.Next(ncols)))
-				continue;
+			var move = 0;
+			if (MoveEvaluation == MoveEvaluation.OneAhead)
+				move = MakeLessRandomMove(board);
+			else
+				move = MakeRandomMove(board);
+			return move;
 		}
 
-		private void MakeLessRandomMove(Board board)
+		private int MakeRandomMove(Board board)
+		{
+			//dirty, mb keep in board list of full columns
+			var move = Generator.Next(ncols);
+			while (!board.PutToken(move))
+			{
+				move = Generator.Next(ncols);
+			}
+			return move;
+		}
+
+		private int MakeLessRandomMove(Board board)
 		{
 			var possibleMoves = new List<int>();
 			var winningMoves = new List<int>(); //and draws
@@ -130,6 +143,7 @@ namespace Connect4.Algorithm_base
 			else
 				move = possibleMoves[Generator.Next(possibleMoves.Count)];
 			board.PutToken(move);
+			return move;
 		}
 
 		public abstract TreeNode SelectNextNode(TreeNode treeNode);
