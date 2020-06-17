@@ -26,9 +26,10 @@ namespace Connect4GUI
 		private bool firstPlayer = true;
 		private VS vs;
 		AlphaBeta ab;
+		UCT uct;
 		PUCT puct;
 		UCB1TUNED ucb1tuned;
-    private bool yourTurn = true;
+		private bool yourTurn = true;
 
 
 		public Connect4()
@@ -54,7 +55,7 @@ namespace Connect4GUI
 				}
 			TurnLabel.BackColor = firstPlayer ? Color.Red : Color.Yellow;
 		}
-    
+
 		private void mainPanel_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (!play) return;
@@ -73,7 +74,7 @@ namespace Connect4GUI
 			if (CheckResult())
 				return;
 			firstPlayer = !firstPlayer;
-			//var move = puct.SelectMove(board);
+			//var move = ucb1tuned.SelectMove(board);
 			//board.PutToken(move);
 			ab.MakeMove(firstPlayer, firstPlayer, board);
 			CheckResult();
@@ -105,25 +106,26 @@ namespace Connect4GUI
 		private void StartButton_Click(object sender, EventArgs e)
 		{
 			ab = new AlphaBeta();
-			puct = new PUCT(2, 123, 100000);
-			//ucb1tuned = new UCB1TUNED(1, 123, 100000);
+			uct = new UCT(2, 123, 50000);
+			puct = new PUCT(2, 123, 10000);
+			ucb1tuned = new UCB1TUNED(1, 123, 50000);
 			if (playerRB.Checked)
 				vs = VS.Player;
 			else if (abRB.Checked)
 				vs = VS.AlphaBeta;
 			else
 				vs = VS.MCTS;
-      yourTurn = youStartBox.Checked;
+			yourTurn = youStartBox.Checked;
 			board = new Board();
 			firstPlayer = play = start = true;
 			MainPanel.Invalidate();
-      if(!yourTurn)
-      {
-        ab.MakeMove(firstPlayer, firstPlayer, board);
-        CheckResult();
-        firstPlayer = !firstPlayer;
-        MainPanel.Invalidate();
-      }
+			if (!yourTurn)
+			{
+				ab.MakeMove(firstPlayer, firstPlayer, board);
+				CheckResult();
+				firstPlayer = !firstPlayer;
+				MainPanel.Invalidate();
+			}
 		}
 	}
 }

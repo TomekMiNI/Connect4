@@ -82,6 +82,8 @@ namespace Connect4
 
 		public double CalculateScore()
 		{
+			if (FreePlaces == 0)
+				return 0;
 			int tokensUsed = MaxTokensCount - FreePlaces;
 			int tokensUsedByWinner = (tokensUsed + 1) / 2;
 			double score = (MaxTokensCount / 2 + 1) - tokensUsedByWinner;
@@ -98,6 +100,7 @@ namespace Connect4
 				currentBoard[column][r - 1] = null;
 				FreePlaces++;
 				ActivePlayer = !ActivePlayer;
+				Result = Result.None;
 			}
 		}
 		public int GetFirstFreeRow(int column)

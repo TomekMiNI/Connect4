@@ -12,7 +12,7 @@ namespace Connect4.Algorithms
 	public class UCT : MCTS
 	{
 		private double ExpC { get; set; }
-		public UCT(double expConst, int seed, int rolloutLimit) : base(seed, rolloutLimit)
+		public UCT(double expConst, int seed, int rolloutLimit, MoveEvaluation moveEvaluation = MoveEvaluation.OneAhead) : base(seed, rolloutLimit, moveEvaluation)
 		{
 			ExpC = expConst;
 		}

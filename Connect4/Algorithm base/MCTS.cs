@@ -8,17 +8,26 @@ namespace Connect4.Algorithm_base
 {
 	using static Constants;
 
+	public enum MoveEvaluation
+	{
+		Random,
+		OneAhead
+	}
+
 	public abstract class MCTS : IAlgorithmInterface
 	{
 		private Random Generator { get; set; }
 		private TreeNode Root { get; set; }
 		private int RolloutLimit { get; set; }
 		internal int Iterations { get; set; }
+		private MoveEvaluation MoveEvaluation { get; set; }
 
-		public MCTS(int seed, int rolloutLimit)
+
+		public MCTS(int seed, int rolloutLimit, MoveEvaluation moveEvaluation)
 		{
 			Generator = new Random(seed);
 			RolloutLimit = rolloutLimit;
+			MoveEvaluation = moveEvaluation;
 		}
 
 		private void Expand()
@@ -34,7 +43,7 @@ namespace Connect4.Algorithm_base
 			{
 				//create new child node
 				var board = currNode.Board.Clone();
-				while (!currNode.AllActionsTested() && !board.PutToken((2 + currNode.ActionsTaken) % ncols)) //neat trick, test mid first ;)
+				while (!currNode.AllActionsTested() && !board.PutToken(currNode.ActionsTaken))
 					currNode.ActionsTaken++;
 
 				//rollout and propagate outcome
@@ -65,7 +74,10 @@ namespace Connect4.Algorithm_base
 			var childPlayer = !node.Board.ActivePlayer;
 			while (board.Result == Result.None)
 			{
-				MakeRandomMove(board);
+				if (MoveEvaluation == MoveEvaluation.OneAhead)
+					MakeLessRandomMove(board);
+				else
+					MakeRandomMove(board);
 			}
 			var score = 0.0;
 			if (board.Result != Result.Draw)
@@ -78,13 +90,46 @@ namespace Connect4.Algorithm_base
 			return score;
 		}
 
-		
-
 		private void MakeRandomMove(Board board)
 		{
 			//dirty, mb keep in board list of full columns
 			while (!board.PutToken(Generator.Next(ncols)))
 				continue;
+		}
+
+		private void MakeLessRandomMove(Board board)
+		{
+			var possibleMoves = new List<int>();
+			var winningMoves = new List<int>(); //and draws
+			var losingMoves = new List<int>();
+			for (int i = 0; i < ncols; i++)
+			{
+				if (board.PutToken(i))
+				{
+					possibleMoves.Add(i);
+					if (board.Result != Result.None)
+					{
+						winningMoves.Add(i);
+					}
+					board.RemoveToken(i);
+					board.ActivePlayer = !board.ActivePlayer;
+					board.PutToken(i);
+					if (board.Result != Result.None)
+					{
+						losingMoves.Add(i);
+					}
+					board.RemoveToken(i);
+					board.ActivePlayer = !board.ActivePlayer;
+				}
+			}
+			var move = 0;
+			if (winningMoves.Any())
+				move = winningMoves[Generator.Next(winningMoves.Count)];
+			else if (losingMoves.Count == 1)
+				move = losingMoves.First();
+			else
+				move = possibleMoves[Generator.Next(possibleMoves.Count)];
+			board.PutToken(move);
 		}
 
 		public abstract TreeNode SelectNextNode(TreeNode treeNode);
@@ -127,7 +172,7 @@ namespace Connect4.Algorithm_base
 		//max child
 		private int BestScoreAction()
 		{
-			var maxScore = 0.0;
+			var maxScore = double.MinValue;
 			var indexOfMax = 0;
 			for (int i = 0; i < ncols; i++)
 			{
