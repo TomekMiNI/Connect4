@@ -37,7 +37,7 @@
       this.startBox = new System.Windows.Forms.GroupBox();
       this.playerStartRB = new System.Windows.Forms.RadioButton();
       this.youStartBox = new System.Windows.Forms.RadioButton();
-      this.mctsRB = new System.Windows.Forms.RadioButton();
+      this.uctRB = new System.Windows.Forms.RadioButton();
       this.puctRB = new System.Windows.Forms.RadioButton();
       this.tunedRB = new System.Windows.Forms.RadioButton();
       this.MainPanel.SuspendLayout();
@@ -104,7 +104,7 @@
       // 
       this.vsGB.Controls.Add(this.tunedRB);
       this.vsGB.Controls.Add(this.puctRB);
-      this.vsGB.Controls.Add(this.mctsRB);
+      this.vsGB.Controls.Add(this.uctRB);
       this.vsGB.Controls.Add(this.abRB);
       this.vsGB.Controls.Add(this.playerRB);
       this.vsGB.Location = new System.Drawing.Point(698, 153);
@@ -172,14 +172,14 @@
       // 
       // mctsRB
       // 
-      this.mctsRB.AutoSize = true;
-      this.mctsRB.Location = new System.Drawing.Point(6, 68);
-      this.mctsRB.Name = "mctsRB";
-      this.mctsRB.Size = new System.Drawing.Size(55, 17);
-      this.mctsRB.TabIndex = 4;
-      this.mctsRB.TabStop = true;
-      this.mctsRB.Text = "MCTS";
-      this.mctsRB.UseVisualStyleBackColor = true;
+      this.uctRB.AutoSize = true;
+      this.uctRB.Location = new System.Drawing.Point(6, 68);
+      this.uctRB.Name = "mctsRB";
+      this.uctRB.Size = new System.Drawing.Size(55, 17);
+      this.uctRB.TabIndex = 4;
+      this.uctRB.TabStop = true;
+      this.uctRB.Text = "MCTS";
+      this.uctRB.UseVisualStyleBackColor = true;
       // 
       // puctRB
       // 
@@ -237,7 +237,7 @@
     private System.Windows.Forms.RadioButton youStartBox;
     private System.Windows.Forms.RadioButton tunedRB;
     private System.Windows.Forms.RadioButton puctRB;
-    private System.Windows.Forms.RadioButton mctsRB;
+    private System.Windows.Forms.RadioButton uctRB;
   }
 }
 

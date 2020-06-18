@@ -53,7 +53,31 @@ namespace Connect4.Algorithm_base
 			{
 				//create new child node
 				var board = currNode.Board.Clone();
-				var move = MakeMove(board);
+
+				var unvisitedChildren = new List<int>();
+				for (int i = 0; i < ncols; i++)
+				{
+					if(currNode.Children[i] == null && board[i,board.NumberOfRows-1] == null)
+					{
+						unvisitedChildren.Add(i);
+					}
+				}
+
+				int move = 0;
+				if(MoveEvaluation == MoveEvaluation.OneAhead)
+				{
+					move = ChooseLessRandomMove(board);
+					if (!unvisitedChildren.Contains(move))
+					{
+						move = unvisitedChildren[Generator.Next(unvisitedChildren.Count)];
+					}
+				}
+				else
+				{
+					move = unvisitedChildren[Generator.Next(unvisitedChildren.Count)];
+				}
+				board.PutToken(move);
+			
 				var child = currNode.CreateChild(board);
 				var score = Rollout(child);
 				child.PropagadeScoreUp(score);
@@ -112,6 +136,13 @@ namespace Connect4.Algorithm_base
 
 		private int MakeLessRandomMove(Board board)
 		{
+			int move = ChooseLessRandomMove(board);
+			board.PutToken(move);
+			return move;
+		}
+
+		private int ChooseLessRandomMove(Board board)
+		{
 			var possibleMoves = new List<int>();
 			var winningMoves = new List<int>(); //and draws
 			var losingMoves = new List<int>();
@@ -125,14 +156,12 @@ namespace Connect4.Algorithm_base
 						winningMoves.Add(i);
 					}
 					board.RemoveToken(i);
-					board.ActivePlayer = !board.ActivePlayer;
 					board.PutToken(i);
 					if (board.Result != Result.None)
 					{
 						losingMoves.Add(i);
 					}
 					board.RemoveToken(i);
-					board.ActivePlayer = !board.ActivePlayer;
 				}
 			}
 			var move = 0;
@@ -142,7 +171,6 @@ namespace Connect4.Algorithm_base
 				move = losingMoves.First();
 			else
 				move = possibleMoves[Generator.Next(possibleMoves.Count)];
-			board.PutToken(move);
 			return move;
 		}
 
@@ -197,6 +225,11 @@ namespace Connect4.Algorithm_base
 				}
 			}
 			return indexOfMax;
+		}
+
+		public void SetSeed(int seed)
+		{
+			Generator = new Random(seed);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Connect4;
+using Connect4.Algorithm_base;
 using Connect4.Algorithms;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Connect4GUI
 		PUCT puct;
 		UCB1TUNED ucb1tuned;
 		private bool yourTurn = true;
-
+		IAlgorithmInterface algorithm = null;
 
 		public Connect4()
 		{
@@ -74,9 +75,7 @@ namespace Connect4GUI
 			if (CheckResult())
 				return;
 			firstPlayer = !firstPlayer;
-			var move = uct.SelectMove(board);
-			board.PutToken(move);
-			//ab.MakeMove(firstPlayer, firstPlayer, board);
+			PlayMove();
 			CheckResult();
 			firstPlayer = !firstPlayer;
 		}
@@ -106,25 +105,46 @@ namespace Connect4GUI
 		private void StartButton_Click(object sender, EventArgs e)
 		{
 			ab = new AlphaBeta();
-			uct = new UCT(Math.Sqrt(2), 123, 25000);
-			puct = new PUCT(Math.Sqrt(2), 123, 25000);
-			ucb1tuned = new UCB1TUNED(1, 123, 25000);
+			uct = new UCT(Math.Sqrt(2), 123, 100000);
+			puct = new PUCT(Math.Sqrt(2), 123, 100000);
+			ucb1tuned = new UCB1TUNED(1, 123, 100000);
 			if (playerRB.Checked)
 				vs = VS.Player;
 			else if (abRB.Checked)
 				vs = VS.AlphaBeta;
 			else
 				vs = VS.MCTS;
+			
+			if (puctRB.Checked)
+				algorithm = puct;
+			if (uctRB.Checked)
+				algorithm = uct;
+			if (tunedRB.Checked)
+				algorithm = ucb1tuned;
+
 			yourTurn = youStartBox.Checked;
 			board = new Board();
 			firstPlayer = play = start = true;
 			MainPanel.Invalidate();
 			if (!yourTurn)
 			{
-				ab.MakeMove(firstPlayer, firstPlayer, board);
+				PlayMove();
 				CheckResult();
 				firstPlayer = !firstPlayer;
 				MainPanel.Invalidate();
+			}
+		}
+
+		private void PlayMove()
+		{
+			if (vs == VS.AlphaBeta)
+			{
+				ab.MakeMove(firstPlayer, firstPlayer, board);
+			}
+			else
+			{
+				var move = algorithm.SelectMove(board);
+				board.PutToken(move);
 			}
 		}
 	}

@@ -11,7 +11,7 @@ namespace Connect4
 	public class AlphaBeta : IAlgorithmInterface
 	{
 
-		private bool isFirstPlayer;
+		public bool IsFirstPlayer;
 		private int depth;
 
 		public AlphaBeta()
@@ -20,15 +20,17 @@ namespace Connect4
 
 		public AlphaBeta(bool isFirstPlayer, int depth = 5)
 		{
-			this.isFirstPlayer = isFirstPlayer;
+			this.IsFirstPlayer = isFirstPlayer;
 			this.depth = depth;
 		}
+
+		
 
 		public int SelectMove(Board board)
 		{
 			var min = int.MinValue;
 			var max = int.MaxValue;
-			return CalculateNextMove(isFirstPlayer, board.ActivePlayer, 0, depth, ref min, ref max, board);
+			return CalculateNextMove(IsFirstPlayer, board.ActivePlayer, 0, depth, ref min, ref max, board);
 		}
 
 		public void MakeMove(bool firstPlayer, bool turnPlayer, Board board, int maxLevel = 5)
@@ -748,6 +750,14 @@ namespace Connect4
 			return Math.Max(leftCount, rightCount);
 		}
 
+		public override string ToString()
+		{
+			return "AlphaBeta";
+		}
 
+		public void SetSeed(int seed)
+		{
+
+		}
 	}
 }

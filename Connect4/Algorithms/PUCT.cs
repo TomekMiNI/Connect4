@@ -46,5 +46,10 @@ namespace Connect4.Algorithms
 			}
 			return treeNode.Children[indexOfMax];
 		}
+
+		public override string ToString()
+		{
+			return "PUCT";
+		}
 	}
 }

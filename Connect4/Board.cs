@@ -84,12 +84,18 @@ namespace Connect4
 		{
 			if (FreePlaces == 0)
 				return 0;
-			int tokensUsed = MaxTokensCount - FreePlaces;
-			int tokensUsedByWinner = (tokensUsed + 1) / 2;
+			int tokensUsedByWinner = MovesByWinner();
 			double score = (MaxTokensCount / 2 + 1) - tokensUsedByWinner;
 			if (normaliseBoardScore)
 				score = score / (MaxTokensCount / 2 + 1);
 			return score;
+		}
+
+		public int MovesByWinner()
+		{
+			int tokensUsed = MaxTokensCount - FreePlaces;
+			int tokensUsedByWinner = (tokensUsed + 1) / 2;
+			return tokensUsedByWinner;
 		}
 
 		public void RemoveToken(int column)

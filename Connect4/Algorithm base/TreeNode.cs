@@ -37,6 +37,12 @@ namespace Connect4.Algorithm_base
 		{
 			Board = board;
 			Children = new TreeNode[ncols];
+
+			for (int i = 0; i < ncols; i++)
+			{
+				if (board[i, board.NumberOfRows - 1] != null)
+					ActionsTaken++;
+			}
 		}
 
 		public bool AllActionsTested()
@@ -64,6 +70,8 @@ namespace Connect4.Algorithm_base
 			{
 				Parent = this
 			};
+
+			
 			return node;
 		}
 
