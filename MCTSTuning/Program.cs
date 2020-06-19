@@ -32,46 +32,58 @@ namespace MCTSTuning
 			var gameCount = 100;
 			var algorithms = new List<IAlgorithmInterface>()
 			{
-				new PUCT(Math.Sqrt(2), 0, rollouts),
-				new UCT(Math.Sqrt(2), 0, rollouts),
+				new PUCT(1, 0, rollouts),
+				new PUCT(2, 0, rollouts),
+				new PUCT(3, 0, rollouts),
+				new PUCT(4, 0, rollouts),
+				new PUCT(5, 0, rollouts),
+				new PUCT(6, 0, rollouts),
+				//new PUCT(Math.Sqrt(2), 0, rollouts),
 				new UCB1TUNED(1, 0, rollouts),
-				new AlphaBeta()
+				//new AlphaBeta()
 			};
-			var ResultDict = new Dictionary<string, int>();
-			var UsedMovesSum = new Dictionary<string, int>();
-			for (int i = 0; i < algorithms.Count; i++)
+			var ResultDictA = new Dictionary<string, int>();
+			var ResultDictB = new Dictionary<string, int>();
+			var UsedMovesSumA = new Dictionary<string, int>();
+			var UsedMovesSumB = new Dictionary<string, int>();
+			for (int i = 0; i < algorithms.Count-1; i++)
 			{
-				for (int j = i + 1; j < algorithms.Count; j++)
+				for (int j = algorithms.Count - 1; j < algorithms.Count; j++)
 				{
 					//A vs B, A is first player
-					ResultDict[algorithms[i].ToString() + " vs " + algorithms[j].ToString()] = 0;
-					ResultDict[algorithms[j].ToString() + " vs " + algorithms[i].ToString()] = 0;
-					UsedMovesSum[algorithms[i].ToString() + " vs " + algorithms[j].ToString()] = 0;
-					UsedMovesSum[algorithms[j].ToString() + " vs " + algorithms[i].ToString()] = 0;
+					ResultDictA[algorithms[i].ToString() + " vs " + algorithms[j].ToString()] = 0;
+					ResultDictA[algorithms[j].ToString() + " vs " + algorithms[i].ToString()] = 0;
+					UsedMovesSumA[algorithms[i].ToString() + " vs " + algorithms[j].ToString()] = 0;
+					UsedMovesSumA[algorithms[j].ToString() + " vs " + algorithms[i].ToString()] = 0;
+					ResultDictB[algorithms[i].ToString() + " vs " + algorithms[j].ToString()] = 0;
+					ResultDictB[algorithms[j].ToString() + " vs " + algorithms[i].ToString()] = 0;
+					UsedMovesSumB[algorithms[i].ToString() + " vs " + algorithms[j].ToString()] = 0;
+					UsedMovesSumB[algorithms[j].ToString() + " vs " + algorithms[i].ToString()] = 0;
 
 					IAlgorithmInterface firstPlayer = algorithms[i];
 					IAlgorithmInterface secondPlayer = algorithms[j];
 					for (int k = 0; k < gameCount; k++)
 					{
 						if(k < gameCount/2)
-							PlayGame(ResultDict, UsedMovesSum, firstPlayer, secondPlayer, k);
+							PlayGame(ResultDictA, UsedMovesSumA, firstPlayer, secondPlayer, k);
 						else
-							PlayGame(ResultDict, UsedMovesSum, secondPlayer, firstPlayer, k);
+							PlayGame(ResultDictB, UsedMovesSumB, secondPlayer, firstPlayer, k);
 						Console.Write(".");
 					}
 					Console.WriteLine();
 					Console.WriteLine($"Progess: {i} vs {j} done");
 				}
 			}
-			foreach (var kvp in ResultDict)
-			{
-				Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-			}
-			var csv = string.Join(
+			var csvA = string.Join(
 				Environment.NewLine,
-				ResultDict.Select(d => $"{d.Key};{d.Value};{UsedMovesSum[d.Key]};")
+				ResultDictA.Select(d => $"{d.Key};{d.Value};{UsedMovesSumA[d.Key]};")
 			);
-			System.IO.File.WriteAllText("./result.csv", csv);
+			System.IO.File.WriteAllText("./resultA.csv", csvA);
+			var csvB = string.Join(
+				Environment.NewLine,
+				ResultDictB.Select(d => $"{d.Key};{d.Value};{UsedMovesSumB[d.Key]};")
+			);
+			System.IO.File.WriteAllText("./resultB.csv", csvB);
 		}
 
 		private static void PlayGame(Dictionary<string, int> ResultDict, Dictionary<string, int> UsedMovesSum, IAlgorithmInterface firstPlayer, IAlgorithmInterface secondPlayer, int k)
@@ -119,7 +131,7 @@ namespace MCTSTuning
 
 		static void TimeMCTS()
 		{
-			var uct = new UCB1TUNED(1, 123, 16000);
+			var uct = new UCT(Math.Sqrt(2), 123, 16000/3, MoveEvaluation.OneAhead);
 			var board = new Board();
 			while(board.Result == Result.None)
 				TimeOneMove(uct, board);

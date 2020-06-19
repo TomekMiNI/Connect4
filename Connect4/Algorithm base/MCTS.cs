@@ -20,7 +20,7 @@ namespace Connect4.Algorithm_base
 		private TreeNode Root { get; set; }
 		private int RolloutLimit { get; set; }
 		internal int Iterations { get; set; }
-		private MoveEvaluation MoveEvaluation { get; set; }
+		internal MoveEvaluation MoveEvaluation { get; set; }
 
 
 		public MCTS(int seed, int rolloutLimit, MoveEvaluation moveEvaluation)

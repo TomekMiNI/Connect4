@@ -12,7 +12,7 @@ namespace Connect4.Algorithms
 	public class UCB1TUNED : MCTS
 	{
 		private double ExpC { get; set; }
-		public UCB1TUNED(double expConst, int seed, int rolloutLimit, MoveEvaluation moveEvaluation = MoveEvaluation.OneAhead) : base(seed, rolloutLimit, moveEvaluation)
+		public UCB1TUNED(double expConst, int seed, int rolloutLimit, MoveEvaluation moveEvaluation = MoveEvaluation.Random) : base(seed, rolloutLimit, moveEvaluation)
 		{
 			ExpC = expConst;
 		}
